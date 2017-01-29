@@ -1,0 +1,38 @@
+.hidden-panel-grid tr {
+    background: transparent;
+    border: none;
+}
+
+.hidden-panel-grid td {
+    border: none !important;
+}
+
+.output-list .action-column {
+    width: 130px;
+}
+.output-list .action-column button {
+    margin: 0 5px;
+}
+
+.ui-column-customfilter .ui-selectonemenu,
+.ui-column-customfilter input
+{
+    width: 70%;
+}
+
+.process-dialog {
+    font-size: 14px;
+}
+
+.process-dialog .process-label {
+    margin: 10px 5px 10px;
+    display: inline-block;
+}
+
+.process-dialog .process-bar {
+    height: 25px;
+}
+
+.process-dialog .process-bar .ui-progressbar-label {
+    padding-top: 5px;
+}

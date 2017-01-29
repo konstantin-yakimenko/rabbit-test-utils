@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+    
+    <!-- task scheduler -->
+    <bean id="taskScheduler" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+        <property name="poolSize" value="10"></property>
+    </bean>
+
+    <!-- task executer -->
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="10" />
+        <property name="maxPoolSize" value="10" />
+    </bean>
+
+    <!-- any process executer -->
+    <bean id="processExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="10" />
+        <property name="maxPoolSize" value="10" />
+    </bean>
+        
+
+    <!-- task manager with initial task list -->
+    <bean id="taskManager" class="ru.jakimenko.tool.task.TaskManager">
+        <constructor-arg name="tasks">
+            <list>
+
+                <bean class="ru.jakimenko.tool.task.RabbitTask" >
+                    <constructor-arg name="taskTemplate" ref="taskTemplate" />
+                    <constructor-arg name="waitTemplate" ref="waitTemplate" />
+                    <constructor-arg name="waitQueueName" value="${rabbitmq.queue.wait.name}" />
+                    <constructor-arg name="cron" value="0 */1 * * * *" />
+                    <constructor-arg name="name" value="Send incorrect problems for repeat fix" />
+                    <constructor-arg name="autoStart" value="false" />
+                    <constructor-arg name="rejectTemplate" ref="rejectTemplate" />
+                </bean>
+
+                <!--                Rabbit tasks                    -->
+                
+                <bean class="ru.jakimenko.tool.task.RabbitGenTask" >
+                    <constructor-arg name="taskTemplate" ref="taskTemplate" />
+                    <constructor-arg name="waitTemplate" ref="waitTemplate" />
+                    <constructor-arg name="waitQueueName" value="${rabbitmq.queue.wait.name}" />
+                    <constructor-arg name="cron" value="0 */1 * * * *" />
+                    <constructor-arg name="name" value="Send problems to mytest queue" />
+                    <constructor-arg name="autoStart" value="false" />
+                    <constructor-arg name="generateCountMes" value="${gener.count.mes}" />
+                </bean>
+                                
+            </list>
+        </constructor-arg>
+        <constructor-arg name="taskScheduler" ref="taskScheduler" />
+    </bean>
+    
+</beans>

@@ -1,0 +1,53 @@
+body {
+    font-size: 14px;
+}
+
+.default-verifications-settings {
+    margin: 10px;
+}
+.default-verifications-settings td {
+    padding: 5px;
+}
+
+.settings-title {
+    margin: 10px 0 0;
+    text-align: left;
+    font-size: 1.3em;
+}
+
+.settings-task-name {
+    padding-left: 20px;        
+    display: inline-block;
+    width: 360px;
+    font-size: 1.2em;
+}
+
+.settings-task-cancel-button {    
+    margin-left: 50px;
+    padding: 2px 10px;
+    font-weight: bold;
+    font-size: 1em;
+    margin-right: 20px;
+}
+
+.settings-entry-name {
+    width: 320px;
+    padding-left: 60px;        
+    display: inline-block;
+    font-size: 1.05em;    
+}
+
+.settings-entry-panel {
+    width: 100%;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.settings-entry-table {
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.period-task-name {
+    font-size: 1em;        
+}

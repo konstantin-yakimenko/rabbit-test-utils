@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:body>
+    <ui:composition template="/template/template.xhtml">
+
+        <ui:define name="content">
+
+
+            <div>
+                <h:form>
+                    <h3 class="settings-title">Rabbit period</h3>
+                    <hr style="width: 730px" align="left"/>
+                    <h:dataTable var="task" value="#{settingsController.getRabbitTasks()}">
+                        <h:column>
+                            <h:panelGroup style="display:inline-block; margin: 3px 0;">
+                                <h:outputText styleClass="settings-task-name period-task-name" value="#{task.name}" />
+                                <p:inputSwitch id="switchTask" value="#{task.active}" style="vertical-align: middle" />
+                                <h:outputText value=" | cron: (#{task.cron})" />
+                                <h:commandButton id="rabbitButton" actionListener="#{task.process()}" value="#{task.running? 'Stop' : 'Start'}" styleClass="settings-task-cancel-button" />
+                                <p:poll interval="1" listener="#{task.isRunning}" update="rabbitButton" />
+                            </h:panelGroup>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </div>
+
+            <div>
+                <h:form>
+                    <h3 class="settings-title">Generate random messages in mytest query</h3>
+                    <hr style="width: 730px" align="left"/>
+                    <h:dataTable var="taskr" value="#{settingsController.getRabbitGenTasks()}">
+                        <h:column>
+                            <h:panelGroup style="display:inline-block; margin: 3px 0;">
+                                <h:outputText styleClass="settings-task-name period-task-name" value="#{taskr.name}" />
+                                <p:inputSwitch id="switchTaskGen" value="#{taskr.active}" style="vertical-align: middle" />
+                                <h:outputText value=" | cron: (#{taskr.cron})" />
+                                <h:commandButton id="rabbitGenButton" actionListener="#{taskr.process()}" value="#{taskr.running? 'Stop' : 'Start'}" styleClass="settings-task-cancel-button" />
+                                <p:poll interval="1" listener="#{taskr.isRunning}" update="rabbitGenButton" />
+                            </h:panelGroup>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </div>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>
+

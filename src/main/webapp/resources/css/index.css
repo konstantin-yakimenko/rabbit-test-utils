@@ -1,0 +1,12 @@
+/* 
+    Created on : Apr 9, 2015, 12:27:27 PM
+    Author     : shade
+*/
+.hidden-panel-grid tr {
+    background: transparent;
+    border: none;
+}
+
+.hidden-panel-grid td {
+    border: none !important;
+}

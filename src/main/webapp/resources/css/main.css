@@ -1,0 +1,30 @@
+.header-grid {
+    width: 100%;
+}
+.header-grid .header-user-info-text {
+    float: right;
+}
+
+.container {
+    margin-bottom: 20px;
+}
+
+
+.main-title {
+    margin: 10px 0 5px;
+    text-align: center;
+}
+
+
+.output-list {
+    font-size: 9pt;
+    margin: 5px auto 0;
+    width: 96%;
+}
+.output-list .id-column {
+    text-align: center;
+    width: 40px;
+}
+.output-list .action-column {
+    text-align: center;
+}

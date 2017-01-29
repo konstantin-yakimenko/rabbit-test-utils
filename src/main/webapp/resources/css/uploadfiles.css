@@ -1,0 +1,17 @@
+
+.uploadfiles-block {
+    position: relative;
+    font-size: 0.9em;
+    width: 96%;
+    margin: 20px auto;
+}
+
+.uploadfiles-block-title {
+    position: absolute;
+    top: -10px;
+    text-align: center;
+    width: 20%;
+    margin: 0 40%;
+    
+}
+

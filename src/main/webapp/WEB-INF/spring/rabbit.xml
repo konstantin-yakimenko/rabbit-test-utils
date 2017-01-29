@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.5.xsd">
+
+    <bean id="retryTemplate" class="org.springframework.retry.support.RetryTemplate">
+        <property name="backOffPolicy">
+            <bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+                <property name="initialInterval" value="500" />
+                <property name="multiplier" value="10.0" />
+                <property name="maxInterval" value="10000" />
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="errorHandler" class="org.springframework.amqp.rabbit.listener.ConditionalRejectingErrorHandler">
+        <constructor-arg index="0">
+            <bean id="exceptionStrategy" class="ru.jakimenko.tool.rabbit.TaskExceptionStrategy"/>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="taskMessageHandler" class="ru.jakimenko.tool.rabbit.TaskMessageHandler" >
+        <constructor-arg index="0" ref="fixHandler" />
+        <constructor-arg index="1" ref="waitTemplate" />
+        <constructor-arg index="2" ref="rejectTemplate" />
+        <constructor-arg index="3" value="${rabbitmq.max.tries}" />
+    </bean>
+    
+    <bean id="taskMessageConverter" class="ru.jakimenko.tool.rabbit.TaskMessageConverter" />
+     
+    <rabbit:connection-factory id="rabbitConnectionFactory"                 
+                               addresses="${rabbitmq.addresses}"
+                               username="${rabbitmq.username}" 
+                               password="${rabbitmq.password}" />
+    
+    <rabbit:template id="taskTemplate"
+                     connection-factory="rabbitConnectionFactory"
+                     message-converter="taskMessageConverter"
+                     retry-template="retryTemplate"
+                     exchange="${rabbitmq.exchange.name}"
+                     routing-key="${rabbitmq.queue.exec.routingkey}" />    
+        
+    <rabbit:listener-container connection-factory="rabbitConnectionFactory"
+                               auto-startup="true"
+                               error-handler="errorHandler"
+                               concurrency="${rabbitmq.thread.count}"
+                               max-concurrency="${rabbitmq.thread.count}">
+        <rabbit:listener queue-names="${rabbitmq.queue.exec.name}" ref="taskListenerAdapter" method="handleMessage" />
+    </rabbit:listener-container>
+    
+    <bean id="taskListenerAdapter" class="org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter">
+        <constructor-arg index="0" ref="taskMessageHandler" />
+        <constructor-arg index="1" ref="taskMessageConverter" />
+    </bean>
+                
+    <rabbit:template id="waitTemplate" 
+                     connection-factory="rabbitConnectionFactory" 
+                     message-converter="taskMessageConverter"
+                     retry-template="retryTemplate"
+                     exchange="${rabbitmq.exchange.name}"
+                     routing-key="${rabbitmq.queue.wait.routingkey}"  />    
+    
+    <rabbit:template id="rejectTemplate" 
+                     connection-factory="rabbitConnectionFactory"
+                     message-converter="taskMessageConverter"
+                     retry-template="retryTemplate"
+                     exchange="${rabbitmq.exchange.name}"
+                     routing-key="${rabbitmq.queue.reject.routingkey}" />    
+    
+</beans>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="warn">
+    <Properties>
+        <Property name="info-pattern">%date{yyyy-MM-dd HH:mm:ss.SSS} [%t] %level %location - %msg%n</Property>
+        <Property name="error-pattern">%date{yyyy-MM-dd HH:mm:ss.SSS} %level %location - %msg%n</Property>
+        <Property name="folder">../logs/rabbittest</Property>
+        <Property name="info-filename">rabbittest</Property>
+        <Property name="error-filename">rabbittest-error</Property>
+    </Properties>
+    <Appenders>
+        <RollingFile name="file" fileName="${folder}/${info-filename}.log" filePattern="${folder}/$${date:yyyy-MM}/${info-filename}-%d{yyyy-dd-MM}.%i.log.gz">
+            <PatternLayout pattern="${info-pattern}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${error-pattern}" />
+        </Console>
+        <RollingFile name="file-error" fileName="${folder}/${error-filename}.log" filePattern="${folder}/$${date:yyyy-MM}/${error-filename}-%d{yyyy-dd-MM}.%i.log.gz">
+            <PatternLayout pattern="${error-pattern}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="file" />
+            <AppenderRef ref="console" level="debug" />
+            <AppenderRef ref="file-error" level="error" />
+        </Root>
+    </Loggers>
+</Configuration>
